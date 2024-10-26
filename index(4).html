@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configs</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: black;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+        }
+        .topnav {
+            overflow: hidden;
+            background-color: black;
+        }
+        .topnav #donate {
+            float: right;
+        }
+        .topnav a {
+            float: left;
+            display: block;
+            color: #FF0062;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            font-family: monospace;
+        }
+        .topnav a:hover {
+            background-color: #9c999a;
+            color: #080808;
+        }
+        .topnav a.active {
+            background-color: #f5034b;
+            color: white;
+        }
+        @media only screen and (max-width: 600px) {
+            .topnav a {
+                float: none;
+                display: block;
+                text-align: left;
+            }
+        }
+        h1 {
+            text-align: center;
+            color: #FF0062;
+            font-family: monospace;
+            font-size: 3em;
+        }
+        p {
+            color: #eeeaea;
+            text-align: center;
+            font-family: monospace;
+            font-size: 2em;
+            padding: 0 10%;
+            margin: 1em 0;
+        }
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .config-item {
+            text-align: center;
+        }
+        .copy-btn {
+            background-color: #FF0062;
+            border: none;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 4px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .copy-btn:hover {
+            background-color: #D1004E;
+        }
+        .copy-btn:active {
+            background-color: #990039;
+        }
+        @media screen and (min-width: 768px) {
+            .config-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #080808;
+            color: white;
+            font-family: monospace;
+            font-size: 1em;
+        }
+        .footer a {
+            color: #FF0062;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            color: #cc004e;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a href="#home" class="active">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a id="donate" href="#donate">Donate</a>
+    </div>
+
+    <h1>Configs</h1>
+    <p>You can use these configs in V2rayN, V2rayNG, Matsuri, Nekobox, etc.</p>
+
+    <div id="configGrid" class="config-grid">
+        <!-- Configs will be loaded here -->
+    </div>
+
+    <div class="footer">
+        طراحی شده توسط <a href="https://example.com" target="_blank">مهدی صدیقی نسب</a>
+    </div>
+
+    <script>
+        const configUrls = [
+            'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vless.html',
+            'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/vmess.html',
+            'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/ss.html',
+            'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/trojan.html',
+            'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/tuic.html',
+            'https://raw.githubusercontent.com/arshiacomplus/v2rayExtractor/refs/heads/main/hy2.html'
+        ];
+
+        const configTypes = [
+            'VMess', 'tuic', 'ss', 'hy2', 'VLess', 'Trojan', 'ShadowSocks', 'Reality'
+        ];
+
+        async function fetchConfigs() {
+            const grid = document.getElementById('configGrid');
+            for (let urlIndex = 0; urlIndex < configUrls.length; urlIndex++) {
+                try {
+                    const response = await fetch(configUrls[urlIndex]);
+                    const data = await response.text();
+                    const configs = data.split('\n').filter(line => line.trim() !== '');
+
+                    configs.forEach((config, configIndex) => {
+                        const configItem = document.createElement('div');
+                        configItem.className = 'config-item';
+
+                        const copyButton = document.createElement('button');
+                        copyButton.textContent = `${configTypes[urlIndex]} ${configIndex + 1}`;
+                        copyButton.className = 'copy-btn';
+                        copyButton.onclick = function() {
+                            navigator.clipboard.writeText(config).then(() => {
+                                alert('Config copied to clipboard!');
+                            });
+                        };
+
+                        configItem.appendChild(copyButton);
+                        grid.appendChild(configItem);
+                    });
+                } catch (error) {
+                    console.error(`Error fetching config from ${configUrls[urlIndex]}:`, error);
+                }
+            }
+        }
+
+        fetchConfigs();
+    </script>
+</body>
+</html>
